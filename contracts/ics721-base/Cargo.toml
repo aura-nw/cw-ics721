@@ -1,7 +1,12 @@
 [package]
 name = "ics721-base"
 version = "0.1.0"
-authors = ["ekez <ekez@withoutdoing.com>", "mr-t <mr-t@arkprotocol.io>", "m@publicawesome.com", "s+git@publicawesome.com"]
+authors = [
+    "ekez <ekez@withoutdoing.com>",
+    "mr-t <mr-t@arkprotocol.io>",
+    "m@publicawesome.com",
+    "s+git@publicawesome.com",
+]
 edition = "2021"
 description = "an implementation of the ICS721 specification for transfering NFTs between blockchains"
 
@@ -16,3 +21,4 @@ library = []
 cosmwasm-std = { workspace = true, features = ["ibc3"] }
 cw2 = { workspace = true }
 ics721 = { workspace = true }
+cosmwasm-schema = { workspace = true }
