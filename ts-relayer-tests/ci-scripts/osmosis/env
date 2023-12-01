@@ -1,6 +1,0 @@
-# TODO change this back to confio/osmosis-ci once it has been updated
-# Until then this forked repo is used: https://github.com/arkprotocol/relayer-ci-images
-REPOSITORY="arkprotocol/osmosis-ci"
-# Choose from https://hub.docker.com/r/cephalopodequipment/osmosisd/tags
-VERSION="v0.0.1"
-CONTAINER_NAME="osmosis"
