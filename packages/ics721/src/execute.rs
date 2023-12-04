@@ -171,13 +171,26 @@ where
             .may_load(deps.storage, (class.id.clone(), token_id.clone()))?
             .flatten();
 
+        // // override token_uri of info with sepcial metadata
+        // let new_token_uri = info.token_uri.map(|_uri| {
+        //     format!(
+        //         "ipfs://bafybeiagz7mewmrxsauy4d5g3irhgwfzv355xkhw3ytttam3xb4daoitym/{}.json",
+        //         token_id
+        //     )
+        // });
+
+        // override token_uri of info with sepcial metadata
+        let new_token_uri = info.token_uri.map(|_uri| {
+            "ipfs://bafybeicpoxivnhvssy3liqurtnfxudiklw4clu7dfd4hzcmu6vnp5x4vwq/get-treasury-box.json".to_string()
+        });
+
         let ibc_message = NonFungibleTokenPacketData {
             class_id: class.id.clone(),
             class_uri: class.uri,
             class_data: class.data.clone(),
 
             token_ids: vec![token_id.clone()],
-            token_uris: info.token_uri.map(|uri| vec![uri]),
+            token_uris: new_token_uri.map(|uri| vec![uri]),
             token_data: token_metadata.map(|metadata| vec![metadata]),
 
             sender: sender.into_string(),
@@ -332,14 +345,14 @@ where
             minter: env.contract.address.to_string(),
         };
 
-        // use collection data for setting name and symbol
-        let collection_data = class
-            .data
-            .clone()
-            .and_then(|binary| from_json::<CollectionData>(binary).ok());
-        if let Some(collection_data) = collection_data {
-            instantiate_msg.name = collection_data.name;
-            instantiate_msg.symbol = collection_data.symbol;
+        // unwrapped to collection data and in case of success, set name and symbol
+        if let Some(binary) = class.data.clone() {
+            let class_data_result: StdResult<CollectionData> = from_json(binary);
+            if class_data_result.is_ok() {
+                let class_data = class_data_result?;
+                instantiate_msg.symbol = class_data.symbol;
+                instantiate_msg.name = class_data.name;
+            }
         }
 
         to_json_binary(&instantiate_msg)

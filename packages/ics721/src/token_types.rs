@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::{fmt, ops::Deref};
 
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{to_json_binary, Addr, Binary, StdResult, WasmMsg};
@@ -11,6 +11,12 @@ use crate::msg::{CallbackMsg, ExecuteMsg};
 /// in the type system.
 #[cw_serde]
 pub struct TokenId(String);
+
+impl fmt::Display for TokenId {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
 
 /// A token according to the ICS-721 spec.
 #[cw_serde]

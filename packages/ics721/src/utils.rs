@@ -1,8 +1,8 @@
 use cosmwasm_std::{Addr, DepsMut, Empty, Env, StdResult};
-use cw721::{ContractInfoResponse, NumTokensResponse};
+use cw721::NumTokensResponse;
 use cw_ownable::Ownership;
 
-use crate::state::CollectionData;
+use crate::state::{CollectionData, Cw2981ContractInfoResponse};
 
 pub fn get_collection_data(deps: &DepsMut, collection: &Addr) -> StdResult<CollectionData> {
     // cw721 v0.17 and higher holds ownership in the contract
@@ -21,7 +21,11 @@ pub fn get_collection_data(deps: &DepsMut, collection: &Addr) -> StdResult<Colle
         }
     };
     let contract_info = deps.querier.query_wasm_contract_info(collection)?;
-    let ContractInfoResponse { name, symbol } = deps.querier.query_wasm_smart(
+    let Cw2981ContractInfoResponse {
+        name: _,
+        symbol,
+        creator: _,
+    } = deps.querier.query_wasm_smart(
         collection,
         &cw721_base::msg::QueryMsg::<Empty>::ContractInfo {},
     )?;
@@ -32,10 +36,10 @@ pub fn get_collection_data(deps: &DepsMut, collection: &Addr) -> StdResult<Colle
 
     Ok(CollectionData {
         owner,
-        contract_info: Some(contract_info),
-        name,
+        contract_info,
+        name: "Stargaze - Ancient treasure".to_string(),
         symbol,
-        num_tokens: Some(count),
+        num_tokens: count,
     })
 }
 
