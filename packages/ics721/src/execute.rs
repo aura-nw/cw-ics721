@@ -11,9 +11,9 @@ use crate::{
     ibc::{NonFungibleTokenPacketData, INSTANTIATE_CW721_REPLY_ID, INSTANTIATE_PROXY_REPLY_ID},
     msg::{CallbackMsg, ExecuteMsg, IbcOutgoingMsg, InstantiateMsg, MigrateMsg},
     state::{
-        CollectionData, UniversalAllNftInfoResponse, CLASS_ID_TO_CLASS, CLASS_ID_TO_NFT_CONTRACT,
-        CW721_CODE_ID, NFT_CONTRACT_TO_CLASS_ID, OUTGOING_CLASS_TOKEN_TO_CHANNEL, PO, PROXY,
-        TOKEN_METADATA,
+        CollectionData, UniversalAllNftInfoResponse, ALLOWED_COLLECTIONS, CLASS_ID_TO_CLASS,
+        CLASS_ID_TO_NFT_CONTRACT, CW721_CODE_ID, NFT_CONTRACT_TO_CLASS_ID,
+        OUTGOING_CLASS_TOKEN_TO_CHANNEL, PO, PROXY, TOKEN_METADATA,
     },
     token_types::{Class, ClassId, Token, TokenId, VoucherCreation, VoucherRedemption},
     ContractError,
@@ -35,6 +35,11 @@ where
         CW721_CODE_ID.save(deps.storage, &msg.cw721_base_code_id)?;
         PROXY.save(deps.storage, &None)?;
         PO.set_pauser(deps.storage, deps.api, msg.pauser.as_deref())?;
+
+        // update allowed collections
+        for collection in msg.allowed_collections {
+            ALLOWED_COLLECTIONS.save(deps.storage, deps.api.addr_validate(&collection)?, &true)?;
+        }
 
         let proxy_instantiate = msg
             .proxy
@@ -181,7 +186,7 @@ where
 
         // override token_uri of info with sepcial metadata
         let new_token_uri = info.token_uri.map(|_uri| {
-            "ipfs://bafybeicpoxivnhvssy3liqurtnfxudiklw4clu7dfd4hzcmu6vnp5x4vwq/get-treasury-box.json".to_string()
+            "ipfs://bafkreihdya7ojagxvinujvrwjnhwmroyrpvma6zpg54q6wog6g2wsc44c4".to_string()
         });
 
         let ibc_message = NonFungibleTokenPacketData {

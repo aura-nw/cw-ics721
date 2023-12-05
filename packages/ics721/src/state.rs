@@ -35,6 +35,8 @@ pub const INCOMING_CLASS_TOKEN_TO_CHANNEL: Map<(ClassId, TokenId), String> = Map
 /// it's source chain, the metadata is removed from the map.
 pub const TOKEN_METADATA: Map<(ClassId, TokenId), Option<Binary>> = Map::new("j");
 
+pub const ALLOWED_COLLECTIONS: Map<Addr, bool> = Map::new("allowed_collections");
+
 #[derive(Deserialize)]
 pub struct UniversalAllNftInfoResponse {
     pub access: UniversalOwnerOfResponse,

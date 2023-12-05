@@ -25,6 +25,9 @@ pub struct InstantiateMsg {
     /// right to do so again. A new pauser may be later nominated by
     /// the CosmWasm level admin via a migration.
     pub pauser: Option<String>,
+    /// currently, we allow only some specific NFT contracts to be used with
+    /// this contract. Because this contract has some special hardcoding
+    pub allowed_collections: Vec<String>,
 }
 
 #[cw721_proxy]

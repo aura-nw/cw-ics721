@@ -313,25 +313,6 @@ impl Test {
             false => None,
         };
 
-        let ics721 = app
-            .instantiate_contract(
-                ics721_id,
-                app.api().addr_make(ICS721_CREATOR),
-                &InstantiateMsg {
-                    cw721_base_code_id: source_cw721_id,
-                    proxy: proxy.clone(),
-                    pauser: admin_and_pauser
-                        .clone()
-                        .map(|p| app.api().addr_make(&p).to_string()),
-                },
-                &[],
-                "ics721-base",
-                admin_and_pauser
-                    .clone()
-                    .map(|p| app.api().addr_make(&p).to_string()),
-            )
-            .unwrap();
-
         let source_cw721_owner = app.api().addr_make(COLLECTION_OWNER_SOURCE_CHAIN);
         let source_cw721 = app
             .instantiate_contract(
@@ -345,6 +326,26 @@ impl Test {
                 &[],
                 "cw721-base",
                 None,
+            )
+            .unwrap();
+
+        let ics721 = app
+            .instantiate_contract(
+                ics721_id,
+                app.api().addr_make(ICS721_CREATOR),
+                &InstantiateMsg {
+                    cw721_base_code_id: source_cw721_id,
+                    proxy: proxy.clone(),
+                    pauser: admin_and_pauser
+                        .clone()
+                        .map(|p| app.api().addr_make(&p).to_string()),
+                    allowed_collections: vec![source_cw721.to_string()],
+                },
+                &[],
+                "ics721-base",
+                admin_and_pauser
+                    .clone()
+                    .map(|p| app.api().addr_make(&p).to_string()),
             )
             .unwrap();
 

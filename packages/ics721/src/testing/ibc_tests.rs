@@ -32,6 +32,8 @@ const ADDR1: &str = "addr1";
 const RELAYER_ADDR: &str = "relayer";
 const CW721_CODE_ID: u64 = 0;
 
+const CW721_ADDRESS: &str = "wasm.allow-ddress1";
+
 #[derive(Default)]
 pub struct Ics721Contract {}
 impl Ics721Execute<Empty> for Ics721Contract {
@@ -105,6 +107,7 @@ fn do_instantiate(deps: DepsMut, env: Env, sender: &str) -> StdResult<Response> 
         cw721_base_code_id: CW721_CODE_ID,
         proxy: None,
         pauser: None,
+        allowed_collections: vec![CW721_ADDRESS.to_string()],
     };
     Ics721Contract::default().instantiate(deps, env, mock_info(sender, &[]), msg)
 }
